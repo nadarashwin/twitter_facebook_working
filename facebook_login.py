@@ -3,9 +3,12 @@
 
 import requests
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import ui
 import key
 from lxml import html
 from bs4 import BeautifulSoup
+import time
 
 '''
 
@@ -24,6 +27,9 @@ print profile
 print graph.get_object("user_events")
 '''
 
+def page_loaded(mydriver):
+	return mydriver.find_element_by_tag_name("body") != None
+ 
 __url = "https://www.facebook.com/"
 __user = key.user
 __pass = key.passw
@@ -32,10 +38,11 @@ __pass_field = ".//*[@id='pass']"
 __login_box = ".//*[@id='u_0_l']"
 
 
-
 mydriver = webdriver.Firefox()
 mydriver.get(__url)
-mydriver.maximize_window()
+wait = ui.WebDriverWait(mydriver, 80)
+wait.until(page_loaded)
+#mydriver.maximize_window()
 
 mydriver.find_element_by_xpath(__email_field).clear()
 mydriver.find_element_by_xpath(__email_field).send_keys(__user)
@@ -52,7 +59,7 @@ count = len(mydriver.find_elements_by_class_name("innerWrap"))
 
 for x in range(0, count):
 	text_box = mydriver.find_element_by_tag_name('textarea')
-	text_box.send_keys("Happy Birthday cHeeRzzz enjoy!! ")	
-	# The birthday message
+	text_box.send_keys("Happy Birthday cHeeRzzz enjoy!! ")
+	text_box.send_keys(Keys.RETURN)
 	time.sleep(5)
 
