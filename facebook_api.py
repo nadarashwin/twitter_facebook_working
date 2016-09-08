@@ -9,9 +9,10 @@ import dateutil.parser as dateparser
 
 
 lim = int(raw_input("whats the number of poss to be retrieved :- "))
+parameters = {'access_token': key.user_fb_token}
+fb_api = ("https://graph.facebook.com/v2.7")
 def get_posts():
-    parameters = {'access_token': key.user_fb_token}
-    r = requests.get('https://graph.facebook.com/v2.7/me?fields=posts.limit(%d){id,message,name,from,description,link,message_tags,created_time}' %lim, params=parameters)
+    r = requests.get('%s/me?fields=posts.limit(%d){id,message,name,from,description,link,message_tags,created_time}' %(fb_api,lim), params=parameters)
     result = json.loads(r.text)
     for i in range(0,lim):
 		try:
@@ -25,4 +26,12 @@ def get_posts():
 			pass
 		except:
 			print "The post is :- " + str(result['posts']['data'][i]['message'])
+
+def friend_lists():
+    	r = requests.get('%s/me?fields=friendlists{name}' %(fb_api), params=parameters)
+	result = json.loads(r.text)
+	for i in range(0,len(result['friendlists']['data'])):
+		print "The name of the friendlist is :- " + str(result['friendlists']['data'][i]['name'])
+
 get_posts()
+friend_lists()
